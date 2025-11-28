@@ -88,7 +88,7 @@ El IPC es esencial para procesos cooperativos y para comunicaciones asíncronas 
 ## 6. Diagramas del Sistema
 
 ### 6.1. Estados de un Proceso
-(archivo: `diagramas/process_states.png`)
+(archivo: `diagramas/process_states.txt`)
 
 Representa la transición entre:
 - NEW → READY  
@@ -99,7 +99,7 @@ Representa la transición entre:
 ---
 
 ### 6.2. Cola del Scheduler
-(archivo: `diagramas/scheduler_queue.png`)
+(archivo: `diagramas/scheduler_queue.txt`)
 
 Muestra:
 - Entrada de procesos a la cola
@@ -110,7 +110,7 @@ Muestra:
 ---
 
 ### 6.3. Flujo de Comunicación IPC
-(archivo: `diagramas/ipc_flow.png`)
+(archivo: `diagramas/ipc_flow.txt`)
 
 Incluye:
 - Envío de mensaje
