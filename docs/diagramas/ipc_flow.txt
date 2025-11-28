@@ -1,0 +1,28 @@
+   PROCESS A                          PROCESS B
++-------------+                   +----------------+
+|   send()    |  message M -----> |    mailbox     |
+|  to B (M)   |                   |  [queue FIFO]   |
++-------------+                   +----------------+
+        |                                  |
+        |                                  v
+        |                          +----------------+
+        |                          |   recv()       |
+        |                          | gets message M |
+        |                          +----------------+
+        |
+        v
++--------------------+
+| A continues READY  |
++--------------------+
+
+       (Blocking behavior)
+If B executes recv() and no messages exist:
++------------+
+| B BLOCKED  |
++------------+
+       |
+When A sends:
+       v
++------------+
+| B READY    |
++------------+
