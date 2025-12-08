@@ -1,6 +1,5 @@
 # Mini Kernel Educativo – Scheduler + IPC
 
-Proyecto académico para la asignatura de **Sistemas Operativos**.  
 El objetivo es implementar un **scheduler Round Robin** y un sistema básico de **comunicación entre procesos (IPC)** mediante colas de mensajes.  
 El kernel está simulado en espacio de usuario con código C y se organiza en módulos independientes.
 
