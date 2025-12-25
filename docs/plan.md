@@ -1,17 +1,18 @@
-# Plan de Desarrollo del Kernel Educativo
+# 🛠️ Educational Kernel Development Plan
 
-## Módulos principales
-- Scheduler Round Robin
-- Sistema de procesos (READY, RUNNING, BLOCKED)
-- IPC mediante colas de mensajes
+## 🧩 Core Modules
+- **Round Robin Scheduler**: Implements time-sliced preemptive multitasking.
+- **Process Management System**: Manages lifecycles using standard states (**READY**, **RUNNING**, **BLOCKED**).
+- **Inter-Process Communication (IPC)**: Facilitates data exchange via message queuing.
 
-## Objetivos
-1. Implementar estructura de procesos
-2. Implementar planificación Round Robin
-3. Diseñar colas de mensajes para IPC
-4. Realizar pruebas funcionales
+## 🎯 Objectives
+1. **Process Architecture**: Define and implement the **Process Control Block (PCB)** and linked-list Ready Queue.
+2. **Scheduling Logic**: Implement the Round Robin algorithm with a configurable **Time Quantum**.
+3. **IPC Design**: Architect a robust message queue system for safe communication between isolated processes.
+4. **Validation**: Execute functional unit tests to verify context switching and synchronization.
 
-## Estados del proceso
-- READY
-- RUNNING
-- BLOCKED
+## 🧵 Process States
+
+- **READY**: The process is loaded in the queue and waiting for CPU allocation.
+- **RUNNING**: The process currently holds the CPU and is executing instructions.
+- **BLOCKED**: The process is suspended, waiting for an external event (I/O or IPC signal).
