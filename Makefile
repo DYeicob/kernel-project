@@ -1,25 +1,25 @@
-# Compilador y flags
+# Compiler and flags
 CC = gcc
 CFLAGS = -Wall -g -Iinclude
 
-# Archivos fuente
+# Source files
 SRCS = src/main.c src/scheduler.c src/process.c src/ipc.c
 OBJS = $(SRCS:.c=.o)
 
-# Nombre del ejecutable final
+# Name of the final executable
 TARGET = kernel
 
-# Regla por defecto
+# Default rule
 all: $(TARGET)
 
-# Enlazar el ejecutable
+# Link the executable
 $(TARGET): $(OBJS)
 	$(CC) $(CFLAGS) -o $(TARGET) $(OBJS)
 
-# Regla para compilar .c -> .o
+# Rule to compile .c files into .o object files
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
-# Limpiar binarios y objetos
+# Clean up binaries and objects
 clean:
 	rm -f $(OBJS) $(TARGET)
