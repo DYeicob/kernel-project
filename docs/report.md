@@ -1,169 +1,117 @@
-# Proyecto SO — Scheduler y Comunicación entre Procesos (IPC)
+# 🛡️ OS Project — Scheduler and Inter-Process Communication (IPC)
 
-## 1. Introducción
-Este proyecto forma parte de la asignatura **Sistemas Operativos** y consiste en implementar una simulación sencilla de un kernel educativo. Nos centramos en dos módulos fundamentales de cualquier sistema operativo real:
+## 1. Introduction
 
-- Gestión y representación de procesos.
-- El **scheduler** o planificador de CPU.
-- La **comunicación entre procesos (IPC)**.
+This project is part of the **Operating Systems** curriculum and consists of implementing a streamlined simulation of an educational kernel. We focus on three fundamental pillars of any modern operating system:
 
-El propósito es comprender cómo se gestionan los procesos a bajo nivel, cómo un sistema operativo decide qué proceso se ejecuta en cada instante y cómo los procesos pueden comunicarse entre sí de forma segura.
+* **Process Management and Representation.**
+* **CPU Scheduling** (The Scheduler).
+* **Inter-Process Communication (IPC).**
+
+The goal is to understand how processes are managed at a low level, how an OS decides which process executes at any given time, and how processes communicate securely.
 
 ---
 
-## 2. Arquitectura del Proyecto
+## 2. Project Architecture
 
-La estructura del proyecto sigue un diseño modular para separar las responsabilidades.
-```
+The project follows a modular design to ensure a clear separation of concerns.
+
+```text
 src/
-├── main.c
-├── process.c / process.h
-├── scheduler.c / scheduler.h
-└── ipc.c / ipc.h
-include/
-docs/
-tests/
-```
+├── main.c              # Kernel entry point and simulation loop
+├── process.c / .h      # Process Control Block (PCB) and lifecycle logic
+├── scheduler.c / .h    # Round Robin implementation
+└── ipc.c / .h          # Message passing primitives
+include/                # Global definitions and shared constants
+docs/                   # Technical reports and diagrams
+tests/                  # Unit and integration tests
 
-Cada módulo representa una parte real del kernel.
+```
 
 ---
 
-## 3. Módulo de Procesos (`process.c`)
+## 3. Process Module (`process.c`)
 
-Este módulo implementa:
+This module implements the **Process Control Block (PCB)** and state management.
 
-- **Estructura `Process`**, con:
-  - PID
-  - estado
-  - prioridad (opcional)
-  - quantum restante
-  - buzón IPC
-- Gestión de estados:
-  - READY
-  - RUNNING
-  - BLOCKED
-  - FINISHED
+### Key Components:
 
-Funciones clave:
-- `create_process()`
-- `block_process()`
-- `finish_process()`
-- `unblock_process()`
+* **`Process` Structure**: Includes PID, current state, priority (optional), remaining quantum, and IPC mailbox.
+* **State Management**:
+* **READY**: Awaiting CPU allocation.
+* **RUNNING**: Currently occupying the CPU.
+* **BLOCKED**: Waiting for an I/O or IPC event.
+* **FINISHED**: Execution completed; awaiting cleanup.
 
-Este módulo permite representar procesos reales en el sistema y preparar su interacción con el scheduler.
+
 
 ---
 
 ## 4. Scheduler (`scheduler.c`)
 
-El planificador ejecuta los procesos usando un algoritmo **Round Robin**, habitual en sistemas time-sharing.
+The scheduler manages process execution using a **Round Robin (RR)** algorithm, which is standard for time-sharing systems.
 
-### Características:
-- Cola de procesos listos (READY)
-- Quantum configurable
-- Cambio de contexto simulado
-- Reintroducción en cola tras agotar quantum
-- Bloqueo y desbloqueo de procesos
-- Selección del siguiente proceso a ejecutar
+### Features:
 
-Este módulo reproduce el comportamiento de un kernel básico de planificación real.
+* **Ready Queue**: A FIFO structure for processes in the READY state.
+* **Configurable Quantum**: Defines the time slice each process receives.
+* **Simulated Context Switching**: Saving and restoring process metadata.
+* **Preemption**: Automatically returning a process to the READY queue once its quantum expires.
 
 ---
 
-## 5. Comunicación entre Procesos (IPC) — `ipc.c`
+## 5. Inter-Process Communication (IPC) — `ipc.c`
 
-El IPC se implementa mediante **buzones de mensajes** (message queues).
+IPC is implemented via **Message Queues (Mailboxes)**.
 
-### Funciones principales:
-- `send(pid_destino, mensaje)`
-- `recv(pid_origen, &mensaje)`
-- Bloqueo automático si no hay mensajes disponibles
-- Desbloqueo cuando un mensaje llega
+### Core Functions:
 
-El IPC es esencial para procesos cooperativos y para comunicaciones asíncronas dentro del sistema.
+* `send(dest_pid, message)`: Dispatches data to a specific process.
+* `recv(src_pid, &message)`: Retrieves data; triggers an **automatic block** if the mailbox is empty.
+* **Synchronization**: Automatically unblocks the receiving process when a message arrives, notifying the scheduler to move it back to the READY state.
 
 ---
 
-## 6. Diagramas del Sistema
+## 6. System Diagrams
 
-### 6.1. Estados de un Proceso
-(archivo: `diagramas/process_states.txt`)
+### 6.1. Process State Transitions
 
-Representa la transición entre:
-- NEW → READY  
-- READY → RUNNING  
-- RUNNING → BLOCKED / FINISHED  
-- BLOCKED → READY  
+Visualizes the flow between:
+`NEW` → `READY` ↔ `RUNNING` → `BLOCKED` → `READY` → `FINISHED`.
 
----
+### 6.2. Scheduler Queue Logic
 
-### 6.2. Cola del Scheduler
-(archivo: `diagramas/scheduler_queue.txt`)
+Demonstrates the circular nature of the RR queue and how the "Time Quantum Expired" event triggers a context switch.
 
-Muestra:
-- Entrada de procesos a la cola
-- Rotación por RR
-- Salida hacia RUNNING
-- Retorno a READY al agotar quantum
+### 6.3. IPC Communication Flow
+
+Illustrates the "Send/Receive" handshake and how the kernel acts as a secure intermediary for message buffering.
 
 ---
 
-### 6.3. Flujo de Comunicación IPC
-(archivo: `diagramas/ipc_flow.txt`)
+## 7. Testing and Validation
 
-Incluye:
-- Envío de mensaje
-- Almacenamiento en buzón
-- Bloqueo/desbloqueo de receptor
-- Notificación al scheduler
+* **Scheduler Tests**: Verified correct RR rotation and quantum compliance.
+* **IPC Tests**: Confirmed that processes correctly block/unblock during message exchanges.
+* **Process Integrity**: Ensured that PCBs are allocated and deallocated without memory leaks.
 
 ---
 
-## 7. Pruebas
+## 8. Conclusions
 
-Las pruebas del proyecto comprueban:
+This project provides a practical foundation in kernel design, demonstrating:
 
-### 7.1 Scheduler
-- Orden correcto en RR
-- Respeto del quantum
-- Bloqueo y desbloqueo
-
-### 7.2 IPC
-- Envío y recepción de mensajes
-- Bloqueo cuando no hay mensajes
-- Integración con scheduler
-
-### 7.3 Procesos
-- Creación correcta de estructuras
-- Estados válidos en todo momento
+1. How abstract processes are represented in memory.
+2. The mechanics of fair CPU distribution.
+3. The necessity of IPC for cooperative multitasking.
 
 ---
 
-## 8. Conclusiones
+## 9. Future Work
 
-Este proyecto permite entender los fundamentos de un kernel real:
+Potential evolutions for this "Mini-Kernel" include:
 
-- Cómo se representan procesos.
-- Cómo un scheduler reparte equitativamente la CPU.
-- Cómo los procesos cooperan mediante IPC.
-- Cómo se integran estas piezas en un sistema coherente.
-
-Además, sirve como base para ampliaciones más avanzadas:
-
-- Schedulers multinivel o con prioridades.
-- Semáforos y sincronización real.
-- Gestión de memoria o threads.
-- Señales o interrupciones.
-
-La implementación modular facilita el aprendizaje, la depuración y la mejora futura.
-
----
-
-## 9. Trabajo Futuro
-
-Este proyecto podría evolucionar hacia un minikernel completo añadiendo:
-- Gestión de memoria
-- Sistema de archivos
-- Drivers simulados
-- Multiprocesamiento (SMP)
+* **Memory Management**: Implementing paging or segmentation.
+* **Multilevel Feedback Queues (MLFQ)**: For more advanced scheduling.
+* **Virtual File System (VFS)**: To simulate disk I/O.
+* **Thread Support**: Introducing lightweight processes.
