@@ -1,44 +1,48 @@
-# Mini Kernel Educativo – Scheduler + IPC
+# 🛡️ Educational Mini Kernel – Scheduler + IPC
 
-El objetivo es implementar un **scheduler Round Robin** y un sistema básico de **comunicación entre procesos (IPC)** mediante colas de mensajes.  
-El kernel está simulado en espacio de usuario con código C y se organiza en módulos independientes.
+The objective of this project is to implement a **Round Robin Scheduler** and a basic **Inter-Process Communication (IPC)** system using message queues.
+The kernel is simulated in user space using C and is organized into independent, modular components.
 
 ---
 
-## ⚙️ Funcionalidades principales
+## ⚙️ Core Functionalities
 
-### 🧵 Gestión de procesos
-- Creación de procesos
-- Estados: READY, RUNNING, BLOCKED
-- Estructura de proceso con PID y nombre
+### 🧵 Process Management
+
+* Process creation and lifecycle management.
+* States: **READY**, **RUNNING**, **BLOCKED**.
+* Implementation of a basic **Process Control Block (PCB)** containing PID and metadata.
 
 ### ⏱️ Scheduler (Planificador)
-- Algoritmo **Round Robin**
-- Quantum configurable
-- Rotación automática entre procesos READY
 
-### 🔗 IPC (Comunicación entre procesos)
-- Envío y recepción de mensajes
-- Simulación de colas de mensajes
-- Desbloqueo de procesos al recibir información
+* **Round Robin** algorithm.
+* Configurable **Time Quantum**.
+* Automatic rotation among processes in the **READY** queue.
 
-### 📂 Modularización
-- `process.c / process.h` → Gestión de procesos  
-- `scheduler.c / scheduler.h` → Algoritmo de planificación  
-- `ipc.c / ipc.h` → Comunicación entre procesos  
-- `main.c` → Simulación del kernel  
+### 🔗 IPC (Inter-Process Communication)
+
+* Message sending and receiving primitives.
+* Simulation of **Message Queues**.
+* Blocking/Unblocking logic for processes awaiting data.
+
+### 📂 Modular Architecture
+
+* `process.c / .h`: Logic for process handling.
+* `scheduler.c / .h`: Planning algorithm implementation.
+* `ipc.c / .h`: Communication protocols.
+* `main.c`: Kernel entry point and simulation loop.
 
 ---
 
-## 📁 Estructura del repositorio
-```
+## 📁 Repository Structure
 
+```text
 .
-├── README.md
-├── LICENSE
-├── Makefile
+├── README.md           # Project overview
+├── LICENSE             # MIT License
+├── Makefile            # Build automation
 │
-├── src/
+├── src/                # Source code
 │   ├── main.c
 │   ├── scheduler.c
 │   ├── scheduler.h
@@ -47,58 +51,58 @@ El kernel está simulado en espacio de usuario con código C y se organiza en m�
 │   ├── ipc.c
 │   └── ipc.h
 │
-├── include/
+├── include/            # Global headers
 │   └── common.h
 │
-├── docs/
-│   ├── diagramas/
+├── docs/               # Technical documentation
+│   ├── diagrams/
 │   ├── report.pdf
 │   └── plan.md
 │
-├── tests/
+├── tests/              # Unit testing suite
 │   ├── test_scheduler.c
 │   └── test_ipc.c
 │
-└── examples/
-└── run_example.sh
+└── examples/           # Use cases
+    └── run_example.sh
 
-````
+```
 
 ---
 
-## 🛠️ Cómo compilar
-Asegúrate de tener `gcc` instalado.
+## 🛠️ Compilation
+
+Ensure you have the `gcc` compiler installed.
 
 ```bash
 make
-````
+
+```
 
 ---
 
-## ▶️ Cómo ejecutar
+## ▶️ Execution
+
+To start the kernel simulation, run:
 
 ```bash
 ./kernel
+
 ```
 
 ---
 
-## 🧹 Limpiar archivos de compilación
+## 🧹 Maintenance
+
+To remove object files and binaries:
 
 ```bash
 make clean
+
 ```
 
 ---
 
-## 📄 Licencia
+## 📚 Final Notes
 
-Este proyecto se distribuye bajo la licencia **MIT**.
-Consulta el archivo `LICENSE` para más información.
-
----
-
-## 📚 Notas finales
-
-Este proyecto es una simulación didáctica:
-no es un kernel real, pero replica los conceptos clave de la gestión de procesos y la comunicación entre ellos.
+This project is a **didactic simulation**. While it is not a "bare-metal" kernel, it accurately replicates key OS concepts such as **Preemptive Scheduling** and **Memory-safe Communication** between isolated processes.
